@@ -5,10 +5,11 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Login() {
+export default function Register() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullname, setFullname] = useState("");
 
   const loginHandler = async (e: any) => {
     e.preventDefault();
@@ -16,20 +17,25 @@ export default function Login() {
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
+    formData.append("fullname", fullname);
 
-    const data = await axios.post("http://localhost:4000/users/login", formData, {
+    const data = await axios.post(
+      "http://localhost:4000/users/register",
+      formData,
+      {
         headers: { "Content-Type": "multipart/form-data" },
-    })
+      }
+    );
 
     try {
-      alert('Login Berhasil');
+      alert("Login Berhasil");
       setEmail("");
       setPassword("");
-      localStorage.setItem("data", JSON.stringify(data.data.data));
+      localStorage.setItem("data", JSON.stringify(data.data));
       localStorage.setItem("token", JSON.stringify(data.data.data.token));
-      router.push("/books");
+      router.push("/login");
     } catch (error) {
-      alert('Login Gagal Password atau Username salah');
+      alert("Login Gagal Password atau Username salah");
       console.log(error);
     }
   };
@@ -49,6 +55,15 @@ export default function Login() {
               required
             />
 
+            <label className="label font-bold ">Fullname</label>
+            <input
+              value={fullname}
+              type="text"
+              onChange={(e) => setFullname(e.target.value)}
+              className="w-full p-2 rounded-md border"
+              required
+            />
+
             <label className="label font-bold ">Password</label>
             <input
               value={password}
@@ -57,10 +72,11 @@ export default function Login() {
               className="w-full p-2 rounded-md border"
               required
             />
+
             <button className="rounded-xl text-white text-md bg-rose-500  w-full px-10 py-2 mt-5">
-              Login
+              Register
             </button>
-            <p>Belum Punya Akun ? <Link className="text-rose-500" href={`http://localhost:3000/register`}>Register</Link></p>
+            <p>Sudah Punya Akun ? <Link className="text-rose-500" href={`http://localhost:3000/login`}>Login</Link></p>
           </div>
         </form>
       </div>

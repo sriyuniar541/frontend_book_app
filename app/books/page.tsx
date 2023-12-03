@@ -121,7 +121,7 @@ export default async function BooksList() {
           </button>
           {/* search */}
         </div>
-      </div>
+      </div> 
       <div className="container  inline-flex pt-[70px] grid grid-cols-3">
         {books.map((book: Book) => (
           <div key={book.id} className="card bg-base-100 shadow-xl w-auto m-5">

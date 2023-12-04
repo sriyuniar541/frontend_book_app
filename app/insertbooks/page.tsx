@@ -3,13 +3,10 @@ import { useState, SyntheticEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-let token = "";
-let userData = "";
 
-if (typeof window !== "undefined") {
-  token = JSON.parse(localStorage.getItem("token"));
-  userData = JSON.parse(localStorage.getItem("data"));
-}
+
+let token = JSON.parse(localStorage.getItem("token"));
+let userData = JSON.parse(localStorage.getItem("data"));
 
 type Category = {
   id: string;
@@ -19,7 +16,7 @@ type Category = {
   category_id: number;
 };
 
-const AddBooks = () => {
+const insertBook = () => {
   const [categorys, setCategorys] = useState([]);
 
   const [title, setTitle] = useState("");
@@ -28,8 +25,6 @@ const AddBooks = () => {
   const [price, setPrice] = useState("");
   const [total_page, setTotal_page] = useState("");
   const [category_id, setCategory_id] = useState("");
-  const [isOpen, setIsOpen] = useState(true);
-  const [addItems, setAddItems] = useState("hidden");
 
   const [isLoading, setIsLoading] = useState(false);
   const [image_url, setImage_url] = useState("");
@@ -58,11 +53,10 @@ const AddBooks = () => {
     await axios.post("http://localhost:4000/books", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`,
       },
     });
     try {
-      setAddItems("hidden");
       alert("Berhasil");
       setIsLoading(false);
       setTitle("");
@@ -74,7 +68,6 @@ const AddBooks = () => {
       setCategory_id("");
       setRelease_year("");
       router.refresh();
-      setIsOpen(!isOpen);
       console.log(formData);
     } catch (error) {
       alert("gagal");
@@ -82,13 +75,6 @@ const AddBooks = () => {
     }
   };
 
-  const handleModal = () => {
-    if (addItems == "") {
-      setAddItems("hidden");
-    } else {
-      setAddItems("");
-    }
-  };
 
   const getCatgeory = async () => {
     const RestApiBooks = "http://localhost:4000/category";
@@ -109,31 +95,11 @@ const AddBooks = () => {
 
   return (
     <>
-      {addItems == "hidden" ? (
-        <button
-          className="btn btn-sky-800 z-[100] mt-[20px]"
-          onClick={handleModal}
-        >
-          Add Book{" "}
-        </button>
-      ) : (
-        <button
-          className=" text-white btn bg-rose-500 z-[100] -mt-[650px] -mr-[65px]"
-          onClick={handleModal}
-        >
-          Close{" "}
-        </button>
-      )}
-
       <div className="">
-        <div className="  bg-slate-50 item-center border-2xl border-black border-2xl w-full mr-[800px] z-50 py-10  px-20 h-full shadow-2xl ">
-          {addItems == "hidden" ? (
-            <a className="z-50 text-3xl -mr-[1000px]">DAFTAR LIST BUKU</a>
-          ) : (
+        <div className="  bg-slate-50 item-center border-2xl border-black border-2xl w-full py-10  px-20 h-full shadow-2xl ">
             <a className="z-50 text-xl ">Tambah Buku</a>
-          )}
 
-          <form onSubmit={handleSubmit} className={addItems}>
+          <form onSubmit={handleSubmit}>
             <div className="">
               <label className="label font-bold ">Title</label>
               <input
@@ -222,4 +188,4 @@ const AddBooks = () => {
   );
 };
 
-export default AddBooks;
+export default insertBook;

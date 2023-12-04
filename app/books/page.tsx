@@ -1,7 +1,6 @@
-import AddBook from './addBook'
-import CardBook from '../[...booksId]/page';
-import Link from 'next/link';
-
+import AddBook from "../insertbooks/page";
+import CardBook from "../[...booksId]/page";
+import Link from "next/link";
 
 type Book = {
   id: string;
@@ -17,18 +16,16 @@ type Book = {
   category_id: number;
 };
 
-
 //get All Books
 export async function getBooks() {
-    const RestApiBooks = "http://localhost:4000/books";
-    const response = await fetch(RestApiBooks, {
-      cache: "no-store",
-    });
-  
-    const result = await response.json();
-    return result;
-  }
+  const RestApiBooks = "http://localhost:4000/books";
+  const response = await fetch(RestApiBooks, {
+    cache: "no-store",
+  });
 
+  const result = await response.json();
+  return result;
+}
 
 export default async function BooksList() {
   const getAllbooks = await getBooks();
@@ -75,15 +72,11 @@ export default async function BooksList() {
             </ul>
           </div>
         </div>
-        <div className="navbar-center ">
-         
-         
-            
-         
-         
-        </div>
+        <div className="navbar-center "></div>
         <div className="navbar-end">
-           <AddBook />
+          <button className="rounded-xl text-md bg-slate-200 py-2  px-3 text-gray-500">
+            <Link href={`http://localhost:3000/addBook`}>Add Book</Link>
+          </button>
           <button className="btn btn-ghost btn-circle">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -121,15 +114,12 @@ export default async function BooksList() {
           </button>
           {/* search */}
         </div>
-      </div> 
+      </div>
       <div className="container  inline-flex pt-[70px] grid grid-cols-3">
         {books.map((book: Book) => (
           <div key={book.id} className="card bg-base-100 shadow-xl w-auto m-5">
             <figure>
-              <img
-                src={book.image_url}
-                alt="Books"
-              />
+              <img src={book.image_url} alt="Books" />
             </figure>
             <div className="card-body">
               <h2 className="card-title">{book.title}</h2>
@@ -140,7 +130,9 @@ export default async function BooksList() {
                 nam nulla ut corrupti doloremque?
               </p>
               <div className="card-actions justify-end btn btn-ros-500">
-                <Link href={`http://localhost:3000/books/${book.id}`}>Read Now</Link>
+                <Link href={`http://localhost:3000/books/${book.id}`}>
+                  Read Now
+                </Link>
               </div>
             </div>
           </div>

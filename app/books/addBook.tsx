@@ -3,6 +3,14 @@ import { useState, SyntheticEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
+let token = "";
+let userData = "";
+
+if (typeof window !== "undefined") {
+  token = JSON.parse(localStorage.getItem("token"));
+  userData = JSON.parse(localStorage.getItem("data"));
+}
+
 type Category = {
   id: string;
   title: string;
@@ -21,9 +29,7 @@ const AddBooks = () => {
   const [total_page, setTotal_page] = useState("");
   const [category_id, setCategory_id] = useState("");
   const [isOpen, setIsOpen] = useState(true);
-  const [addItems,setAddItems] = useState('hidden')
-  
-  
+  const [addItems, setAddItems] = useState("hidden");
 
   const [isLoading, setIsLoading] = useState(false);
   const [image_url, setImage_url] = useState("");
@@ -50,11 +56,13 @@ const AddBooks = () => {
     formData.append("image_url", image_url);
 
     await axios.post("http://localhost:4000/books", formData, {
-      // "Content-Type" : "multipart/form-data",
-      // header : {Authorization : `Bearer ${token}`}
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
     });
     try {
-      setAddItems('hidden');
+      setAddItems("hidden");
       alert("Berhasil");
       setIsLoading(false);
       setTitle("");
@@ -75,11 +83,11 @@ const AddBooks = () => {
   };
 
   const handleModal = () => {
-    if(addItems == '') {
-        setAddItems('hidden')
+    if (addItems == "") {
+      setAddItems("hidden");
     } else {
-      setAddItems('')
-    };
+      setAddItems("");
+    }
   };
 
   const getCatgeory = async () => {
@@ -100,26 +108,31 @@ const AddBooks = () => {
   }, []);
 
   return (
-     <>{addItems == 'hidden' ? 
-     <button
-      className="btn btn-sky-800 z-[100] mt-[20px]"
-      onClick={handleModal}
-    >Add Book </button>
-     
-     :  <button
-     className=" text-white btn bg-rose-500 z-[100] -mt-[650px] -mr-[65px]"
-     onClick={handleModal}
-   >Close </button>}
-     
-    <div className="">
+    <>
+      {addItems == "hidden" ? (
+        <button
+          className="btn btn-sky-800 z-[100] mt-[20px]"
+          onClick={handleModal}
+        >
+          Add Book{" "}
+        </button>
+      ) : (
+        <button
+          className=" text-white btn bg-rose-500 z-[100] -mt-[650px] -mr-[65px]"
+          onClick={handleModal}
+        >
+          Close{" "}
+        </button>
+      )}
 
+      <div className="">
         <div className="  bg-slate-50 item-center border-2xl border-black border-2xl w-full mr-[800px] z-50 py-10  px-20 h-full shadow-2xl ">
-       
-        {addItems == 'hidden' ? 
-     <a className="z-50 text-3xl -mr-[1000px]">DAFTAR LIST BUKU</a>
-     
-     :  <a className="z-50 text-xl ">Tambah Buku</a>}
-        
+          {addItems == "hidden" ? (
+            <a className="z-50 text-3xl -mr-[1000px]">DAFTAR LIST BUKU</a>
+          ) : (
+            <a className="z-50 text-xl ">Tambah Buku</a>
+          )}
+
           <form onSubmit={handleSubmit} className={addItems}>
             <div className="">
               <label className="label font-bold ">Title</label>
@@ -129,7 +142,8 @@ const AddBooks = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder=" Title"
                 className="w-full p-2 rounded-md border"
-                required />
+                required
+              />
 
               <label className="label font-bold ">deskription</label>
               <input
@@ -137,7 +151,8 @@ const AddBooks = () => {
                 type="text"
                 onChange={(e) => setDeskription(e.target.value)}
                 className="w-full p-2 rounded-md border"
-                required />
+                required
+              />
 
               <label className="label font-bold ">image_url</label>
               <input
@@ -145,7 +160,8 @@ const AddBooks = () => {
                 accept="image/*"
                 onChange={hadleImage}
                 className="w-full p-2 rounded-md border"
-                required />
+                required
+              />
 
               <label className="label font-bold ">release_year</label>
               <input
@@ -155,7 +171,8 @@ const AddBooks = () => {
                 max="2021"
                 onChange={(e) => setRelease_year(e.target.value)}
                 className="w-full p-2 rounded-md border"
-                required />
+                required
+              />
 
               <label className="label font-bold ">price</label>
               <input
@@ -163,7 +180,8 @@ const AddBooks = () => {
                 type="text"
                 onChange={(e) => setPrice(e.target.value)}
                 className="w-full p-2 rounded-md border"
-                required />
+                required
+              />
 
               <label className="label font-bold ">total_page</label>
               <input
@@ -172,7 +190,8 @@ const AddBooks = () => {
                 max="1000"
                 onChange={(e) => setTotal_page(e.target.value)}
                 className="w-full p-2 rounded-md border"
-                required />
+                required
+              />
 
               {/* select */}
 
@@ -195,11 +214,11 @@ const AddBooks = () => {
               <button className="rounded-xl text-white text-md bg-rose-500  w-full px-10 p-2">
                 Simpan
               </button>
-             
             </div>
           </form>
         </div>
-      </div></>
+      </div>
+    </>
   );
 };
 
